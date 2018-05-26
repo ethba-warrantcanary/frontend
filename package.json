@@ -1,0 +1,29 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ethba-warrantcanary/frontend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ethba-warrantcanary/frontend/issues"
+  },
+  "homepage": "https://github.com/ethba-warrantcanary/frontend#readme",
+  "description": "",
+  "dependencies": {
+    "async": "^2.6.1",
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "fs": "0.0.1-security",
+    "json": "^9.0.6",
+    "path": "^0.12.7",
+    "web3": "^1.0.0-beta.34"
+  }
+}
