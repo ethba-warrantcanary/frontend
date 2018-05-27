@@ -45,9 +45,11 @@ function startWebApp(){
       console.log(json[i]);
       // -> Do web3.js getCanaryNameByAddress(address _address) return string canary.name
         // -> parse canary.name
+        /* Just used for testing purposes */
       canary[i].name = "pew pew";
       canary[i].lastblock = 42;
       canary[i].alive = true;
+        /* Just used for testing purposes */
       // -> Do web3.js getCanaryLastBlockPing(address _address) return uint canary.lastblock
         // -> parse canary.lastblock
       // -> Do web3.js isCanaryAlive(address _address) return bool canary.alive

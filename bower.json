@@ -1,0 +1,17 @@
+{
+  "name": "warrantcanary-dashboard",
+  "description": "A frontend to an Ethereum based warrant canary",
+  "main": "index.html",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.6",
+    "web3": "^0.16.0",
+    "jquery-ui": "^1.11.4"
+  }
+}
