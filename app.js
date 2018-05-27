@@ -66,7 +66,6 @@ function startWebApp(){
       //web3.eth.defaultAccount = account;
       //console.log("1: " + canaryname + " 2: " + canarylastblock + " 3: " + canaryalive);
       for(var i = 0; i < addresses.length; i++){ // For each in json (if json.length = 2, do 2)
-        console.log('we got here: ' + i);
         table += '<tr><td id="add' + addresses[i] +'">' +  "addresses[" + i + "]"
         + '</td><td id="lastblock' + addresses[i] +'">' + "lastblock" + "addresses[" + i + "]"
         + '</td><td id="isalive' + addresses[i] +'">' + "isalive" + "addresses[" + i + "]"
