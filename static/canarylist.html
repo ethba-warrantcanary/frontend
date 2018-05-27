@@ -1,6 +1,15 @@
 
 
 <h1 class="canaries" style="margin-top: 15%;"><i class="protect icon"></i> Canaries</h1>
+
+<div id="become-canary">
+  <button id="become-canary-btn">Become a Canary</button>
+</div>
+
+<div style="display:none;" id="ping-as-canary">
+  <button id="ping-as-canary-btn">Ping as Canary</button>
+</div>
+
 <table class="ui sortable celled table">
   <thead>
     <tr>
@@ -15,3 +24,124 @@
     <!-- Insert Canaries here  -->
   </tbody>
 </table>
+
+<script>
+  if (typeof(web3) === "undefined") {
+      alert("Unable to find web3. " +
+          "Please run MetaMask (or something else that injects web3).");
+  } else {
+      console.log("Found injected web3.");
+      let web3 = new Web3(window.web3.currentProvider);
+  }
+
+  if (web3.version.network != 3) {
+      alert("Wrong network detected. Please switch to the Ropsten test network.");
+  } else {
+      console.log("Connected to the Ropsten test network.");
+  }
+
+  let account = '';
+  let contractAddress = '0x0849c22e4bfbe4cf7d7d21e4b0a5de33836d7d56';
+  let abi = [{"constant":true,"inputs":[{"name":"_address","type":"address"}],"name":"getCanaryNameByAddress","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_name","type":"bytes32"}],"name":"initCanary","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"pingCanary","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[{"name":"_address","type":"address"}],"name":"getCanaryLastBlockPing","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_address","type":"address"}],"name":"isCanaryAlive","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"}];
+  let contract = web3.eth.contract(abi).at(contractAddress);
+
+  //Become a Canary
+  document.getElementById("become-canary-btn").addEventListener('click', () => {
+      contract.initCanary.sendTransaction(web3.eth.accounts[0], {from: web3.eth.accounts[0],gas:400000,gasPrice:21000000000}, function (err, hash) {
+          let becomecanarybtn = document.getElementById("become-canary-btn");
+          becomecanarybtn.style.display = 'none';
+
+          let becomecanary = document.getElementById("become-canary");
+          becomecanary.disabled = true;
+          becomecanary.innerText = "Validating Canary...";
+
+          if (err) {
+              return error(err);
+          }
+
+          waitForReceipt(hash, function () {
+              console.log("Transaction succeeded.");
+              becomecanary.innerText = "Canary transaction has been submitted.\r\nHash: "+ hash;
+              becomecanary.disabled = true;
+              becomecanary.style.color = '#698c67';
+              becomecanary.style.fontWeight = "800";
+              becomecanary.style.padding = "1em";
+          });
+      });
+  });
+
+  //See if the current account is a canary or not
+  contract.getCanaryNameByAddress(web3.eth.accounts[0], (e,r) => {
+     if(r === "0x0000000000000000000000000000000000000000000000000000000000000000") {
+         //not a canary
+     } else {
+         let becomecanarybtn = document.getElementById("become-canary-btn");
+         becomecanarybtn.style.display = 'none';
+
+         let pingascanary = document.getElementById("ping-as-canary");
+         pingascanary.style.display = 'block';
+     }
+  });
+
+  //Ping as Canary
+  document.getElementById("ping-as-canary").addEventListener('click', () => {
+      contract.pingCanary.sendTransaction({from: web3.eth.accounts[0],gas:100000,gasPrice:21000000000}, function (err, hash) {
+          let pingascanarybtn = document.getElementById("ping-as-canary-btn");
+          pingascanarybtn.style.display = 'none';
+
+          let pingascanary = document.getElementById("ping-as-canary");
+          pingascanary.disabled = true;
+          pingascanary.innerText = "Validating Canary Ping...";
+
+          if (err) {
+              return error(err);
+          }
+
+          waitForReceipt(hash, function () {
+              console.log("Transaction succeeded.");
+              pingascanary.innerText = "Ping transaction has been submitted.\r\nHash: "+ hash;
+              pingascanary.disabled = true;
+              pingascanary.style.color = '#698c67';
+              pingascanary.style.fontWeight = "800";
+              pingascanary.style.padding = "1em";
+          });
+      });
+  });
+
+  function waitForReceipt(hash, cb) {
+      web3.eth.getTransactionReceipt(hash, function (err, receipt) {
+          if (err) {
+              error(err);
+          }
+
+          if (receipt !== null) {
+              // Transaction went through
+              if (cb) {
+                  cb(receipt);
+              }
+          } else {
+              // Try again in 1 second
+              window.setTimeout(function () {
+                  waitForReceipt(hash, cb);
+              }, 1000);
+          }
+      });
+  }
+
+  //Show Canary statuses
+  web3.eth.defaultAccount = account;
+  let canaries = [
+      "0x45b240e96c4b39c7bc62893b8ae4f20f29cf2d80",
+      "0x0bda834163fcc10fdbcd3944cc9834e77ea31207"
+  ];
+
+  canaries.forEach(function(c, i) {
+      console.log("Canary: "+ c);
+      contract.isCanaryAlive.call("0x45b240e96c4b39c7bc62893b8ae4f20f29cf2d80", (e, r) => {
+          console.log(e);
+          console.log(r);
+          return r;
+      });
+  });
+
+</script>
