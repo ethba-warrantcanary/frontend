@@ -29,17 +29,6 @@
     <!-- BODY CONTAINER -->
     <div class="ui body container" style="height: 100%;">
         {{ content }}
-        <div class="row">
-          <div>
-            <h1 class="page-header">Check Canary:</h1>
-            <form id="check_canary_status" method="post">
-                <input type="text" name="canary_address" />
-                <input type="submit" value="Check Status" />
-            </form>
-          </div>
-          STATUS: <span id="canary_status"></span> <br />
-          LAST PING: <span id="canary_ping"></span> <br />
-        </div>
     </div>
 
     <!-- FOOTER -->
@@ -51,51 +40,6 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript">
-    //let web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:9545/"));
-    let web3 = new Web3(new Web3.providers.HttpProvider("https://ropsten.infura.io/BvLrFkkpvJn7LSt3EUUz"));
-    let account = '';
-    let contractAddress = '0x2fc22f539f769486ba027ba7dbf2b8bdeea06c99';
-    let abi = [{"constant":true,"inputs":[{"name":"_address","type":"address"}],"name":"getCanaryNameByAddress","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_name","type":"bytes32"}],"name":"initCanary","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"pingCanary","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[{"name":"_address","type":"address"}],"name":"getCanaryLastBlockPing","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_address","type":"address"}],"name":"isCanaryAlive","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"}];
-    let contract = web3.eth.contract(abi).at(contractAddress);
-    web3.eth.defaultAccount = account;
-
-    // Get the initial account balance so it can be displayed.
-    web3.eth.getAccounts(function(err, accs) {
-        if (err != null) {
-            alert("There was an error fetching your accounts.");
-            return;
-        }
-
-        if (accs.length == 0) {
-            console.log("No accounts found!");
-            return;
-        }
-
-        accounts = accs;
-        account = accounts[0];
-        console.log("Account: "+ account);
-        document.querySelector('form#check_canary_status input').value = account;
-    });
-
-    console.log(contract);
-
-    var objCheckCanary = document.getElementById("check_canary_status");
-    objCheckCanary.addEventListener('submit', (e) => {
-        e.preventDefault();
-        _0xaddress = document.querySelector('form#check_canary_status input').value;
-
-        if(contract.isCanaryAlive(_0xaddress)) {
-            document.getElementById("canary_status").innerText = "CANARY IS ALIVE";
-
-            var lastblock = contract.getCanaryLastBlockPing(_0xaddress);
-            document.getElementById("canary_status").innerText = lastblock;
-
-        } else {
-            document.getElementById("canary_status").innerText = "CANARY IS DEAD ALIVE";
-        }
-    });
-</script>
 </body>
 
 </html>
